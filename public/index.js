@@ -15,6 +15,7 @@
 
 		});
 		companies.setMainCompanyAdjunction();
+		//companies.getTemplate('template.html');
 
 
 
@@ -44,7 +45,30 @@ function Companies() {
 		console.log(list);
 	}
 
+	/*
+	$.get('ajax/test.html', function(data) {
+	  $('.result').html(data);
+	  alert('Load was performed.');
+	});
+	'template.html'
+	*/
+	var tpl= "";
+	$.get('template.html', function(res) {
+		tpl= res;
+		console.log(tpl);//
+	});
+	/*
+	var getTemplate= function(templateUrl) {
+		$.get(templateUrl, function(tpl) {
+			console.log(tpl);//
 
+		  return tpl;
+		});
+	}
+
+
+	var tpl= getTemplate('template.html');
+	/*
 	var tpl= '<div id={{id}} class="company" >'+
 		'<h3  >'+
 			'<a id=name-{{id}} class="name" href="#editName">{{name}}</a><input id=editName-{{id}} class="editName hidden" value="{{name}}" > '+
@@ -55,6 +79,7 @@ function Companies() {
 		'<sup id=sumEE-{{id}} class="sEE" ></sup>'+
 	'</div>';
 	//redo later as html-template
+	*/
 
 	this.companyChain= function(id) {
 		insertCompany(list[id],list[0]);
@@ -112,12 +137,12 @@ function Companies() {
 	this.populateRecur= function(ownerId) {
 		//console.log(list);
 		ownerId= ownerId || 0;
-		console.log("-",ownerId);//
+		//console.log("-",ownerId);//
 		for (var key in list) {
 			if (!list[key]) continue;
-			console.log(key,"--",ownerId,list[key].belongs2);//,list[key].belongs2,"?==",owner.id);//
+			//console.log(key,"--",ownerId,list[key].belongs2);//,list[key].belongs2,"?==",owner.id);//
 			if (parseInt(list[key].belongs2)===parseInt(ownerId)) {
-				console.log("yes!");
+				//console.log("yes!");
 				insertCompany(key); //insertCompany(list[key], owner);
 				this.populateRecur(key);
 			}

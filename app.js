@@ -32,7 +32,7 @@ var methodOverride= require("method-override");
 
 app.get('/', function (req, res) { //index
 	//res.render('index.html');
-	console.log( ">", req.body.test );//x
+	//console.log( ">", req.body.test );//x
 
 
 	//res.sendFile(__dirname+'/public/index.html');
@@ -46,7 +46,7 @@ function buildArrayById(arr1) {
 	//var tmp= array;
 	var arr2= [];
 	for (var key in arr1) {
-		console.log("--",key,arr1[key]);
+		//console.log("--",key,arr1[key]);
 		arr2[arr1[key].id]= arr1[key];
 	}
 	//console.log(">>",arr2);
@@ -68,7 +68,7 @@ app.get("/API/get-companies", function(req,res) {
 
 			var list= buildArrayById(results);
 
-			console.log(list);
+			//console.log(list);
 			db.close();
 
 			//...
@@ -101,7 +101,7 @@ app.post("/API/insert-company", function(req,res) { //insert new company
 
 			collection.insert(company, function(err,docs) {
 				if (err) throw err;
-				console.log("docs after insert:",docs);//x
+				//console.log("docs after insert:",docs);//x
 				db.close();
 
 				res.json({ id: count });
@@ -135,7 +135,7 @@ app.put("/API/update-company", function(req,res) {
 	console.log("API PUT");
 
 	var company= req.body;
-	console.log(company.id,company.name);
+	console.log("update:",company.id,company.name);
 
 
 	MongoClient.connect(mongoUrl, function(err,db) {
@@ -147,7 +147,7 @@ app.put("/API/update-company", function(req,res) {
 			"eE": parseFloat(company.eE)
 		}}, { w:1}, function(err,docs) {
 			if (err) throw err;
-			console.log(docs);
+			//console.log(docs);
 			db.close();
 
 			res.json({ answer: "ok" });
@@ -164,7 +164,7 @@ app.delete("/API/delete-company", function(req,res) {
 	console.log("API DEL");
 
 	var idSet= req.body.idSet;
-	console.log(idSet);
+	console.log("del:",idSet);
 
 
 	MongoClient.connect(mongoUrl, function(err,db) {
@@ -172,7 +172,7 @@ app.delete("/API/delete-company", function(req,res) {
 
 		var collection= db.collection('companies');
 		for (var key in idSet) {
-			console.log("[x]:",idSet[key]);
+			//console.log("[x]:",idSet[key]);
 			collection.deleteOne({id: parseInt(idSet[key])});
 		}
 
