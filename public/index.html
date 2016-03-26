@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html><head>
+
+	<title>ElifTech Test</title>
+
+	<!-- BootStrap -->
+	<meta charset="utf-8">	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+	<!-- CodeMirror >
+	<script src="codemirror/lib/codemirror.js"></script>
+	<script src="codemirror/mode/javascript/javascript.js"></script>
+	<link rel="stylesheet" href="codemirror/lib/codemirror.css">
+	<link rel="stylesheet" href="codemirror/theme/default.css">
+	-->
+
+	<!-- Flot (below jQuery) --
+	<script type="text/javascript" src="flot/jquery.flot.js"></script -->
+
+	<!-- Own resources -->
+	<script src="index.js"></script>
+	<!-- link rel="shortcut icon" href="favicon.ico" type="image/x-icon" -->
+	<link rel="stylesheet" href="style.css">
+
+</head><body>
+
+	<!-- div id=tpl class="company" style="border:1px solid black; display:inline-block;" >
+		<p id=name style="font-style:bold; border:1px solid black; "></p>
+		<p id=eE style="border:1px solid black; "></p>
+	</div -->
+	<div id=0 style="border:1px solid black; /*display:inline-block;* background:Khaki ;*/" >
+		<!-- h3><a id=addCompany-0 class="addMainCompany" href="#+">Add new main company</a></h3 -->
+		<div class="btn-group">
+		  <button id=addCompany-0 type="button" class="btn btn-primary">Add new main company</button>
+		  <div class="btn-group">
+		    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+		    Choose the company <span class="caret"></span></button>
+		    <ul class="dropdown-menu" role="menu">
+		      <li><a href="#">c1</a></li>
+					<li><a href="#">c2</a></li>
+		      <li><a href="#">...</a></li>
+		    </ul>
+		  </div>
+		</div>
+		<span id=sumEE-0></span>
+	</div>
+
+</body></html>

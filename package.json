@@ -1,0 +1,26 @@
+{
+  "name": "ElifTech",
+  "version": "0.0.1",
+  "description": "Test",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/andrewtatomyr/ElifTech.git"
+  },
+  "author": "andrew tatomyr",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/andrewtatomyr/ElifTech/issues"
+  },
+  "homepage": "https://github.com/andrewtatomyr/ElifTech#readme",
+  "dependencies": {
+    "express": "*",
+    "body-parser": "*",
+    "method-override": "*",
+    "cookie-parser": "*",
+    "mongodb": "*"
+  }
+}
