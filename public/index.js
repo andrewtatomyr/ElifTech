@@ -9,6 +9,10 @@
 			//companies.companyChain(6);//
 			companies.populateRecur();
 			companies.sumEarnings();
+
+
+			//companies.printNestedChain(4)//
+
 		});
 		companies.setMainCompanyAdjunction();
 
@@ -81,7 +85,7 @@ function Companies() {
 		var maxColor= 150;
 		$(el).css({background:"rgb("+Math.floor(Math.random()*maxColor)+","+Math.floor(Math.random()*maxColor)+","+Math.floor(Math.random()*maxColor)+")"});
 
-		console.log(id,">>",list[id]);
+		//console.log(id,">>",list[id]);
 		document.getElementById(list[id].belongs2).appendChild(el);
 		document.getElementById("name-"+id).onclick= function() { editName(id); }
 		//document.getElementById("editName-"+c.id).onkeypress= function(e) { renameCompany(c.id, e); }
@@ -110,8 +114,10 @@ function Companies() {
 		ownerId= ownerId || 0;
 		console.log("-",ownerId);//
 		for (var key in list) {
-			console.log("--",ownerId,key);//,list[key].belongs2,"?==",owner.id);//
+			if (!list[key]) continue;
+			console.log(key,"--",ownerId,list[key].belongs2);//,list[key].belongs2,"?==",owner.id);//
 			if (parseInt(list[key].belongs2)===parseInt(ownerId)) {
+				console.log("yes!");
 				insertCompany(key); //insertCompany(list[key], owner);
 				this.populateRecur(key);
 			}
@@ -120,32 +126,7 @@ function Companies() {
 
 	}
 
-	/*
-	this.populateRecur= function(owner) {
-		//console.log(list);
-		owner= owner || list[0];
-		console.log("-",owner.id);//
-		for (var key in list) {
-			console.log("--",owner.id,key);//,list[key].belongs2,"?==",owner.id);//
-			if (list[key].belongs2==owner.id) {
-				insertCompany(key); //insertCompany(list[key], owner);
-				this.populateRecur(list[key]);
-			}
 
-		}
-
-	}
-	*/
-
-
-	/*
-	this.populateAll= function() {
-		for (var key in list) {
-
-			this.populateOwn(list[key]);
-		}
-	}
-	*/
 
 	this.sumEarnings= function() {
 		sumRecur();
@@ -160,7 +141,8 @@ function Companies() {
 		var hasSubsidiaries= false;
 		for (var key in list) {
 			//console.log(ownerId,"?==",list[key].belongs2,"("+key+")",(list[key].belongs2-ownerId));
-			if (list[key].belongs2==ownerId) {
+			if (!list[key]) continue;
+			if (parseInt(list[key].belongs2)===parseInt(ownerId)) {
 				//console.log("===");
 				sumEE+= sumRecur(key);
 				hasSubsidiaries= true;
@@ -176,6 +158,8 @@ function Companies() {
 
 		return sumEE;
 	}
+
+
 
 
 	var editName= function(id) {
@@ -235,25 +219,6 @@ function Companies() {
 
 		});
 
-
-
-
-
-		//document.getElementById("name-"+id).innerHTML= newName;
-		/*
-		var subsidiaryName= prompt("Enter subsidiary company name");
-		if (subsidiaryName) {
-			var sid= list.length;
-			list[sid]= {
-				id: sid,
-				name: subsidiaryName,
-				eE: 0,
-				belongs2: id
-			};
-			insertCompany(list[sid], list[id]);
-			//document.getElementById("name-"+id).innerHTML= newName;
-		}
-		*/
 	}
 
 	this.setMainCompanyAdjunction= function() {
@@ -264,6 +229,7 @@ function Companies() {
 		delete list[id];
 		// також не забути видалити всі дочірні елементи масиву!
 		$("#"+id).remove();
+		dbDelCompany(id);
 	}
 
 
@@ -304,13 +270,16 @@ function Companies() {
 			//data: list[id],
 			success: function(res) {
 				//console.log("res",res);
+
+
+				/*
 				var tmp= res.answer;
 
 				for (var key in tmp) {
 					list[tmp[key].id]= tmp[key];
 				}
-
-
+				*/
+				list= res.list;
 
 
 
@@ -343,7 +312,7 @@ function Companies() {
 	var dbUpdateCompany= function(id) {
 		$.ajax({
 			method: "put",
-			url: "/API/update-company?id="+id,
+			url: "/API/update-company?",
 			dataType: "json",
 			data: list[id],
 			success: function(res) {
@@ -351,6 +320,49 @@ function Companies() {
 			},
 			error: function() {
 				console.log("Error update");//dm
+			}
+		});
+	}
+
+
+	var findNested= function(id) {
+		var nested= [];
+		for (var key in list) {
+			if (!list[key]) continue;
+			if (parseInt(list[key].belongs2)===parseInt(id)) {
+				nested[nested.length]= key;
+				//nested[nested.length]= nested.concat(findNested(key));//nested.push(findNested(key));
+				var innerNested= findNested(key);
+				if (innerNested.length) nested= nested.concat(innerNested);
+			}
+		}
+		//console.log(id,":",nested);
+		return nested;
+	}
+
+	this.printNestedChain= function(id) {
+		var nested= findNested(id);
+		console.log(nested);
+	}
+
+	var dbDelCompany= function(id) {
+
+		var idSet= [id].concat(findNested(id));
+		console.log(idSet);
+
+
+
+
+		$.ajax({
+			method: "delete",
+			url: "/API/delete-company?id",
+			dataType: "json",
+			data: {idSet},
+			success: function(res) {
+				console.log("deleted in db");
+			},
+			error: function() {
+				console.log("Error delete");//dm
 			}
 		});
 	}

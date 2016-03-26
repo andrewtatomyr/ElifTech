@@ -20,8 +20,8 @@ app.use(bodyParser.json());
 
 
 var MongoClient = require('mongodb').MongoClient;
-var mongoUrl = 'mongodb://localhost:27017/test';
-
+//var mongoUrl = 'mongodb://localhost:27017/test';
+var mongoUrl = 'mongodb://eliftech:1@ds025239.mlab.com:25239/eliftech_companies';
 
 
 var methodOverride= require("method-override");
@@ -42,6 +42,16 @@ app.get('/', function (req, res) { //index
 	//console.log("start refresh | uName: ", uName);//x
 });
 
+function buildArrayById(arr1) {
+	//var tmp= array;
+	var arr2= [];
+	for (var key in arr1) {
+		console.log("--",key,arr1[key]);
+		arr2[arr1[key].id]= arr1[key];
+	}
+	//console.log(">>",arr2);
+	return arr2;
+}
 
 app.get("/API/get-companies", function(req,res) {
 	console.log("API GET");
@@ -52,11 +62,17 @@ app.get("/API/get-companies", function(req,res) {
 		var collection= db.collection('companies');
 		collection.find().toArray(function(err, results) { //{ lastDateTime: {$gt:req.body.lastDateTime} }
 			if (err) throw err;
-			console.log(results);
+
+			//console.log(results);
+
+
+			var list= buildArrayById(results);
+
+			console.log(list);
 			db.close();
 
 			//...
-			res.json({ answer: results });
+			res.json({  list });
 		});
 
 	});
@@ -73,6 +89,26 @@ app.post("/API/insert-company", function(req,res) { //insert new company
 		if (err) throw err;
 
 		var collection= db.collection('companies');
+
+		collection.find().toArray(function(err, results) { //{ lastDateTime: {$gt:req.body.lastDateTime} }
+			if (err) throw err;
+
+
+
+			var count= buildArrayById(results).length;
+
+			company.id= count;
+
+			collection.insert(company, function(err,docs) {
+				if (err) throw err;
+				console.log("docs after insert:",docs);//x
+				db.close();
+
+				res.json({ id: count });
+
+			});
+		});
+		/*
 		collection.count(function(err, count) { //{ lastDateTime: {$gt:req.body.lastDateTime} }
 			if (err) throw err;
 			console.log(count);//x
@@ -88,7 +124,7 @@ app.post("/API/insert-company", function(req,res) { //insert new company
 			});
 
 		});
-
+		*/
 	});
 
 });
@@ -108,7 +144,7 @@ app.put("/API/update-company", function(req,res) {
 		var collection= db.collection('companies');
 		collection.update({id: parseInt(company.id)}, {	$set:{
 			"name": company.name,
-			"eE": parseInt(company.eE)
+			"eE": parseFloat(company.eE)
 		}}, { w:1}, function(err,docs) {
 			if (err) throw err;
 			console.log(docs);
@@ -124,8 +160,32 @@ app.put("/API/update-company", function(req,res) {
 
 
 
+app.delete("/API/delete-company", function(req,res) {
+	console.log("API DEL");
 
-app.post('/API/sign-up', function(req,res) { //AJAX sign up
+	var idSet= req.body.idSet;
+	console.log(idSet);
+
+
+	MongoClient.connect(mongoUrl, function(err,db) {
+		if (err) throw err;
+
+		var collection= db.collection('companies');
+		for (var key in idSet) {
+			console.log("[x]:",idSet[key]);
+			collection.deleteOne({id: parseInt(idSet[key])});
+		}
+
+	});
+
+});
+
+
+
+
+
+
+app.post('/AJAX/sign-up', function(req,res) { //AJAX sign up
 	//only from original site
 	var dateTime= new Date().getTime();
 
