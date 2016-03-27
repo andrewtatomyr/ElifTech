@@ -5,9 +5,10 @@
 		var companies= new Companies();
 		companies.dbGetCompanies(function() {
 			companies.printList();
+			companies.dropdownPopulate();
 
-			//companies.companyChain(6);//
-			companies.populateRecur();
+			//companies.companyChain(1);//
+			companies.populateRecur();//
 			companies.sumEarnings();
 
 
@@ -53,10 +54,42 @@ function Companies() {
 	'template.html'
 	*/
 	var tpl= "";
-	$.get('template.html', function(res) {
+	$.get('company.tpl.html', function(res) {
 		tpl= res;
-		console.log(tpl);//
+		//console.log(tpl);//
 	});
+
+	var liTpl= "";
+	$.get('list.tpl.html', function(res) {
+		liTpl= res;
+	});
+
+	this.dropdownPopulate= function() {
+		for (var key in list) {
+
+
+			if ( !list[key] ) continue; //|| key==0
+			console.log(key, !list[key] || key==0);
+
+
+			var el= document.createElement('li');
+			//$(el).attr({"id":c.id});
+			//el.setAttribute("id", id);
+
+			//$(el).addClass("company-scope");
+			//el.setAttribute("class", "company-scope");
+
+			var elHTML= liTpl;
+			elHTML= elHTML.replace("{{companyName}}", list[key].name);
+			//elHTML= elHTML.replace(/{{id}}/g, id);
+
+			el.innerHTML= elHTML;
+
+
+			document.getElementById("dropdownList").appendChild(el);
+		}
+	}
+
 	/*
 	var getTemplate= function(templateUrl) {
 		$.get(templateUrl, function(tpl) {
@@ -82,8 +115,8 @@ function Companies() {
 	*/
 
 	this.companyChain= function(id) {
-		insertCompany(list[id],list[0]);
-		this.populateRecur(list[id]);
+		insertCompany(id,0);
+		this.populateRecur(id);
 	}
 
 
