@@ -5,7 +5,7 @@
 		var companies= new Companies();
 		setTimeout(function() {//tpl
 			companies.dbGetCompanies(function() {
-				companies.printList();
+				//companies.printList();
 				companies.dropdownPopulate();
 
 				//companies.companyChain(1);//
@@ -157,6 +157,8 @@ function Companies() {
 		document.getElementById("addCompany-"+id).onclick= function() { addCompany(id); }
 		document.getElementById("delCompany-"+id).onclick= function() { delCompany(id); }
 
+		document.getElementById("company-"+id).onclick= function() { highlightCompany(id); }
+
 		//if ()
 
 	}
@@ -294,7 +296,10 @@ function Companies() {
 		dbDelCompany(id);
 	}
 
-
+	var highlightCompany= function(id) {
+		$(".company").removeClass("highlited");
+		$("#company-"+id).addClass("highlited");
+	}
 
 	//------A-J-A-X-----
 
