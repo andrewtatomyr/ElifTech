@@ -1,12 +1,13 @@
 
 
 (function() {
+
 	setTimeout(function() {
 		var companies= new Companies();
 		setTimeout(function() {//tpl
 			companies.dbGetCompanies(function() {
 				//companies.printList();
-				companies.dropdownPopulate();
+				//companies.dropdownPopulate();
 
 				//companies.companyChain(1);//
 				companies.populateRecur();//
@@ -14,9 +15,10 @@
 
 
 				//companies.printNestedChain(4)//
-
+				$('[data-toggle="tooltip"]').tooltip();//tooltip
 			});
 			companies.setMainCompanyAdjunction();
+
 			//companies.getTemplate('template.html');
 
 		}, 100);//tpl
@@ -58,7 +60,7 @@ function Companies() {
 	var tpl= "";
 	$.get('company.tpl.html', function(res) {
 		tpl= res;
-		console.log("tpl:",tpl);//
+		//console.log("tpl:",tpl);//
 	});
 
 	var liTpl= "";

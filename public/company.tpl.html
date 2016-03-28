@@ -1,18 +1,18 @@
-<div id=company-{{id}} class="company well" >
+<div id=company-{{id}} class="company well"  >
 	<span  >
 		<h5 class="companyName" >
 			<a id=name-{{id}} class="name" href="#editName">{{name}}</a><input id=editName-{{id}} class="editName hidden" value="{{name}}" >
 		</h5>
 
 	</span>
-	<span class="earnings-labels">
-		<span class="eE label label-primary" >$<a id=eE-{{id}} href="#changeEE" class="eE" >{{eE}}</a><input id=changeEE-{{id}} class="changeEE hidden" type=number step="0.01" value="{{eE}}" ></span>
+	<span class="earnings-labels" data-toggle="tooltip" title data-original-title="Estimated earnings" >
+		<span class="eE label label-primary" >$<a id=eE-{{id}} href="#changeEE" class="eE"  >{{eE}}</a><input id=changeEE-{{id}} class="changeEE hidden" type=number step="0.01" value="{{eE}}" ></span>
 		<span id=sumEE-{{id}} class="sEE label label-default" ></span>
 	</span>
 
 	<span class="companyControls">
-		<a id=addCompany-{{id}} class="addCompany" href="#+"><span class="glyphicon glyphicon-plus"></span></a>
-		<a id=delCompany-{{id}} class="delCompany" href="#x"><span class="glyphicon glyphicon-trash"></span></a>
+		<a id=addCompany-{{id}} class="addCompany" href="#+" data-toggle="tooltip" title data-original-title="Add a subsidiary company" ><span class="glyphicon glyphicon-plus"></span></a>
+		<a id=delCompany-{{id}} class="delCompany" href="#x" data-toggle="tooltip" title data-original-title="Delete the company" ><span class="glyphicon glyphicon-trash"></span></a>
 	</span>
 
 </div>

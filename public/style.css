@@ -26,6 +26,7 @@
 	margin: 5px;
 }
 
+
 .companyControls {
 	float: right;
 	margin: 5px;
@@ -58,4 +59,8 @@
 
 .highlited {
 	background: lightblue;
+}
+
+#sumEE-0 {
+	display: none;
 }
