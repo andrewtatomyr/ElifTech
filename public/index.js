@@ -160,6 +160,8 @@ function Companies() {
 		document.getElementById("delCompany-"+id).onclick= function() { delCompany(id); }
 
 		document.getElementById("company-"+id).onclick= function() { highlightCompany(id); }
+		document.getElementById("delCompany-"+id).onmouseover= function() { highlightRelatedCompanies(id); }
+		document.getElementById("delCompany-"+id).onmouseout= function() { unHighlightRelatedCompanies(id); }
 
 		//if ()
 
@@ -303,6 +305,17 @@ function Companies() {
 		$("#company-"+id).addClass("highlited");
 	}
 
+	var highlightRelatedCompanies= function(id) {
+		var idSet= [id].concat(findNested(id));
+		for (var key in idSet) {
+			$("#company-"+idSet[key]).addClass("highlitedRemove");
+		}
+	}
+
+	var unHighlightRelatedCompanies= function(id) {
+		$(".company").removeClass("highlitedRemove");
+	}
+
 	//------A-J-A-X-----
 
 
@@ -315,14 +328,14 @@ function Companies() {
 
 		$.ajax({
 			method: "post",
-			url: "/API/insert-company",
+			url: "/API/add-company",
 			dataType: "json",
 			data: company,
 			success: function(res) {
 				var id= res.id;
 				list[id]= company;
 				list[id].id= id;
-				console.log("inserted to db, id=",id,"company=",list[id]);
+				console.log("added to db, id=",id,"company=",list[id]);
 				callback(id);
 			},
 			error: function() {
