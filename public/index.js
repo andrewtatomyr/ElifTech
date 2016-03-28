@@ -3,21 +3,23 @@
 (function() {
 	setTimeout(function() {
 		var companies= new Companies();
-		companies.dbGetCompanies(function() {
-			companies.printList();
-			companies.dropdownPopulate();
+		setTimeout(function() {//tpl
+			companies.dbGetCompanies(function() {
+				companies.printList();
+				companies.dropdownPopulate();
 
-			//companies.companyChain(1);//
-			companies.populateRecur();//
-			companies.sumEarnings();
+				//companies.companyChain(1);//
+				companies.populateRecur();//
+				companies.sumEarnings();
 
 
-			//companies.printNestedChain(4)//
+				//companies.printNestedChain(4)//
 
-		});
-		companies.setMainCompanyAdjunction();
-		//companies.getTemplate('template.html');
+			});
+			companies.setMainCompanyAdjunction();
+			//companies.getTemplate('template.html');
 
+		}, 100);//tpl
 
 
 
@@ -56,7 +58,7 @@ function Companies() {
 	var tpl= "";
 	$.get('company.tpl.html', function(res) {
 		tpl= res;
-		//console.log(tpl);//
+		console.log("tpl:",tpl);//
 	});
 
 	var liTpl= "";
@@ -141,10 +143,12 @@ function Companies() {
 		//console.log(elHTML);
 
 		var maxColor= 150;
-		$(el).css({background:"rgb("+Math.floor(Math.random()*maxColor)+","+Math.floor(Math.random()*maxColor)+","+Math.floor(Math.random()*maxColor)+")"});
+		//$(el).css({background:"rgb("+Math.floor(Math.random()*maxColor)+","+Math.floor(Math.random()*maxColor)+","+Math.floor(Math.random()*maxColor)+")"});
 
 		//console.log(id,">>",list[id]);
 		document.getElementById(list[id].belongs2).appendChild(el);
+
+		//console.log(">>",tpl, elHTML);//x
 		document.getElementById("name-"+id).onclick= function() { editName(id); }
 		//document.getElementById("editName-"+c.id).onkeypress= function(e) { renameCompany(c.id, e); }
 		document.getElementById("editName-"+id).onblur= function() { renameCompany(id); }
@@ -415,7 +419,7 @@ function Companies() {
 			method: "delete",
 			url: "/API/delete-company?id",
 			dataType: "json",
-			data: {idSet},
+			data: {idSet:idSet},
 			success: function(res) {
 				console.log("deleted in db");
 			},

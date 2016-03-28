@@ -20,8 +20,8 @@ app.use(bodyParser.json());
 
 
 var MongoClient = require('mongodb').MongoClient;
-//var mongoUrl = 'mongodb://localhost:27017/test';
-var mongoUrl = 'mongodb://eliftech:1@ds025239.mlab.com:25239/eliftech_companies';
+var mongoUrl = 'mongodb://localhost:27017/test';
+//var mongoUrl = 'mongodb://eliftech:1@ds025239.mlab.com:25239/eliftech_companies';
 
 
 var methodOverride= require("method-override");

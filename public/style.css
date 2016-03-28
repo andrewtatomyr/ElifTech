@@ -1,5 +1,5 @@
 .company-scope {
-	border: 1px dotted black;
+	/*border: 1px dotted black;*/
 	margin:  0px  0px 0px 20px;
 	/*display: inline-block;*/
 
@@ -9,12 +9,13 @@
 	/*background: pink;*/
 	padding: 5px;
 	/*display: inline-block;*/
-	color: lightgrey;
+	color: black; lightgrey;
+	border: 1px solid black;
 
 }
 
 .eE, .name, .addCompany, .delCompany {
-	color: white;
+	color: black; white;
 }
 
 .eE {
@@ -22,7 +23,7 @@
 }
 
 .sEE {
-	color: lightgrey;
+	color: grey; lightgrey;
 }
 
 .editName, .changeEE {
