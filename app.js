@@ -79,7 +79,7 @@ app.get("/API/get-companies", function(req,res) {
 
 });
 
-app.post("/API/insert-company", function(req,res) { //insert new company
+app.post("/API/add-company", function(req,res) { //insert new company
 	console.log("API POST");
 
 	var company= req.body;
@@ -92,7 +92,6 @@ app.post("/API/insert-company", function(req,res) { //insert new company
 
 		collection.find().toArray(function(err, results) { //{ lastDateTime: {$gt:req.body.lastDateTime} }
 			if (err) throw err;
-
 
 
 			var count= buildArrayById(results).length;
