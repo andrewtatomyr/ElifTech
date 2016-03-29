@@ -21,7 +21,7 @@
 
 			//companies.getTemplate('template.html');
 
-		}, 100);//tpl
+		}, 500);//tpl
 
 
 
@@ -35,7 +35,7 @@
 		}, 3000);
 		*/
 
-	}, 100);
+	}, 500);
 
 
 
