@@ -163,6 +163,9 @@ function Companies() {
 		document.getElementById("delCompany-"+id).onmouseover= function() { highlightRelatedCompanies(id); }
 		document.getElementById("delCompany-"+id).onmouseout= function() { unHighlightRelatedCompanies(id); }
 
+		document.getElementById("toggleTree-"+id).onclick= function() { toggleTree(id); }
+
+		console.log(id,"--",list[id].belongs2); if (list[id].belongs2!=0) $(document.getElementById("toggleTree-"+list[id].belongs2).firstChild).addClass("glyphicon-minus");
 		//if ()
 
 	}
@@ -280,7 +283,7 @@ function Companies() {
 		};
 
 		dbAddCompany(company, function(id) {
-			console.log("addCompany id=",id);//x
+			//console.log("addCompany id=",id);//x
 			insertCompany(id); //insertCompany(list[id], list[ownerId]);
 			editName(id);
 			window.location= "#editName-"+id;
@@ -291,6 +294,9 @@ function Companies() {
 
 	this.setMainCompanyAdjunction= function() {
 		document.getElementById("addCompany-0").onclick= function() { addCompany(0); }
+		document.getElementById("expandAll").onclick= function() { expandAll(); }
+		document.getElementById("collapseAll").onclick= function() { collapseAll(); }
+
 	}
 
 	var delCompany= function(id) {
@@ -315,6 +321,100 @@ function Companies() {
 	var unHighlightRelatedCompanies= function(id) {
 		$(".company").removeClass("highlitedRemove");
 	}
+
+	var expandAll= function() {
+		//$(document.getElementById("toggleTree-"+id).firstChild).removeClass("glyphicon-plus");
+		//$(document.getElementById("toggleTree-"+id).firstChild).addClass("glyphicon-minus");
+		for (var key in list) {
+			if (
+				document.getElementById("toggleTree-"+key) &&
+				$(document.getElementById("toggleTree-"+key).firstChild).hasClass("glyphicon-plus")
+			) {
+				$(document.getElementById("toggleTree-"+key).firstChild).removeClass("glyphicon-plus");
+				$(document.getElementById("toggleTree-"+key).firstChild).addClass("glyphicon-minus");
+			}
+
+			//if (parseInt(list[key].belongs2)===parseInt(id)) {
+			$("#"+key).removeClass("hidden");
+			//}
+		}
+	}
+
+	var collapseAll= function() {
+		for (var key in list) {
+			console.log( ":",list[key],":",document.getElementById("toggleTree-"+key) );//x
+			if (
+				document.getElementById("toggleTree-"+key) &&
+				$(document.getElementById("toggleTree-"+key).firstChild).hasClass("glyphicon-minus")
+			) {
+				console.log("+ -> -");//x
+				$(document.getElementById("toggleTree-"+key).firstChild).removeClass("glyphicon-minus");
+				$(document.getElementById("toggleTree-"+key).firstChild).addClass("glyphicon-plus");
+			}
+
+			/**/
+			if ( parseInt(list[key].belongs2) ) {
+				console.log("&",key, ":",parseInt(list[key].belongs2));
+				$("#"+key).addClass("hidden"); //css({"display":"none"});
+			}
+			/**/
+
+		}
+	}
+
+
+
+	var toggleTree= function(id) {
+
+		if ( $(document.getElementById("toggleTree-"+id).firstChild).hasClass("glyphicon-minus") ) { //collapse
+			$(document.getElementById("toggleTree-"+id).firstChild).removeClass("glyphicon-minus");
+			$(document.getElementById("toggleTree-"+id).firstChild).addClass("glyphicon-plus");
+			var idSet= findNested(id);
+			for (var key in idSet) {
+				console.log(":",idSet[key],":",document.getElementById("toggleTree-"+idSet[key]).firstChild);//x
+				if ( $(document.getElementById("toggleTree-"+idSet[key]).firstChild).hasClass("glyphicon-minus") ) {
+					console.log("+ -> -");
+					$(document.getElementById("toggleTree-"+idSet[key]).firstChild).removeClass("glyphicon-minus");
+					$(document.getElementById("toggleTree-"+idSet[key]).firstChild).addClass("glyphicon-plus");
+				}
+
+				$("#"+idSet[key]).addClass("hidden"); //css({"display":"none"});
+			}
+		} else { //expand
+			$(document.getElementById("toggleTree-"+id).firstChild).removeClass("glyphicon-plus");
+			$(document.getElementById("toggleTree-"+id).firstChild).addClass("glyphicon-minus");
+			for (var key in list) {
+				if (parseInt(list[key].belongs2)===parseInt(id)) {
+					$("#"+key).removeClass("hidden");
+				}
+			}
+		}
+
+
+	}
+
+
+	var findNested= function(id) {
+		var nested= [];
+		for (var key in list) {
+			if (!list[key]) continue;
+			if (parseInt(list[key].belongs2)===parseInt(id)) {
+				nested[nested.length]= key;
+				//nested[nested.length]= nested.concat(findNested(key));//nested.push(findNested(key));
+				var innerNested= findNested(key);
+				if (innerNested.length) nested= nested.concat(innerNested);
+			}
+		}
+		//console.log(id,":",nested);
+		return nested;
+	}
+
+	this.printNestedChain= function(id) {
+		var nested= findNested(id);
+		console.log(nested);
+	}
+
+
 
 	//------A-J-A-X-----
 
@@ -407,25 +507,6 @@ function Companies() {
 	}
 
 
-	var findNested= function(id) {
-		var nested= [];
-		for (var key in list) {
-			if (!list[key]) continue;
-			if (parseInt(list[key].belongs2)===parseInt(id)) {
-				nested[nested.length]= key;
-				//nested[nested.length]= nested.concat(findNested(key));//nested.push(findNested(key));
-				var innerNested= findNested(key);
-				if (innerNested.length) nested= nested.concat(innerNested);
-			}
-		}
-		//console.log(id,":",nested);
-		return nested;
-	}
-
-	this.printNestedChain= function(id) {
-		var nested= findNested(id);
-		console.log(nested);
-	}
 
 	var dbDelCompany= function(id) {
 

@@ -36,8 +36,12 @@
 	margin: 5px;
 }
 
-.name, .addCompany, .delCompany {
+.name, .addCompany, .delCompany, .toggleTree {
 	color: black; /*white;*/
+}
+
+.togglleSpan {
+	width: 10px;
 }
 
 .eE {

@@ -174,7 +174,7 @@ app.delete("/API/delete-company", function(req,res) {
 			//console.log("[x]:",idSet[key]);
 			collection.deleteOne({id: parseInt(idSet[key])});
 		}
-
+		//db.close();
 	});
 
 });

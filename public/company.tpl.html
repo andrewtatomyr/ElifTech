@@ -1,4 +1,5 @@
 <div id=company-{{id}} class="company well"  >
+	<a id=toggleTree-{{id}} class="toggleTree" href="#+-" ><span class="glyphicon togglleSpan"></span></a>
 	<span  >
 		<h5 class="companyName" >
 			<a id=name-{{id}} class="name" href="#editName">{{name}}</a><input id=editName-{{id}} class="editName hidden" value="{{name}}" >
@@ -11,7 +12,7 @@
 	</span>
 
 	<span class="companyControls">
-		<a id=addCompany-{{id}} class="addCompany" href="#+" data-toggle="tooltip" title data-original-title="Add a subsidiary company" ><span class="glyphicon glyphicon-plus"></span></a>
+		<a id=addCompany-{{id}} class="addCompany" href="#+" data-toggle="tooltip" title data-original-title="Add a subsidiary company" ><span class="glyphicon glyphicon-plus-sign"></span></a>
 		<a id=delCompany-{{id}} class="delCompany" href="#x" data-toggle="tooltip" title data-original-title="Delete the company and it's subsidiaries" ><span class="glyphicon glyphicon-trash"></span></a>
 	</span>
 
