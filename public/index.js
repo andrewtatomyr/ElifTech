@@ -385,7 +385,7 @@ function Companies() {
 			$(document.getElementById("toggleTree-"+id).firstChild).addClass("glyphicon-minus");
 			for (var key in list) {
 				console.log(parseInt(list[key].belongs2),"~",parseInt(id));//x
-				if (parseInt(list[key].belongs2)===parseInt(id)) { //!
+				if ( isNaN(list[key].belongs2) || parseInt(list[key].belongs2)===parseInt(id) ) { //!
 					$("#"+key).removeClass("hidden");
 				}
 			}
