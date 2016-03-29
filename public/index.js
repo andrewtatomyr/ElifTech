@@ -353,7 +353,7 @@ function Companies() {
 			}
 
 			/**/
-			if ( parseInt(list[key].belongs2) ) { //!
+			if ( list[key] && parseInt(list[key].belongs2) ) { //!
 				console.log("&",key, ":",parseInt(list[key].belongs2));
 				$("#"+key).addClass("hidden"); //css({"display":"none"});
 			}
