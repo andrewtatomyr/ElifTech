@@ -17,7 +17,7 @@
 				//companies.printNestedChain(4)//
 				$('[data-toggle="tooltip"]').tooltip();//tooltip
 			});
-			companies.setMainCompanyAdjunction();
+			companies.setMainCompanyControls();
 
 			//companies.getTemplate('template.html');
 
@@ -292,7 +292,7 @@ function Companies() {
 
 	}
 
-	this.setMainCompanyAdjunction= function() {
+	this.setMainCompanyControls= function() {
 		document.getElementById("addCompany-0").onclick= function() { addCompany(0); }
 		document.getElementById("expandAll").onclick= function() { expandAll(); }
 		document.getElementById("collapseAll").onclick= function() { collapseAll(); }
@@ -353,7 +353,7 @@ function Companies() {
 			}
 
 			/**/
-			if ( parseInt(list[key].belongs2) ) {
+			if ( parseInt(list[key].belongs2) ) { //!
 				console.log("&",key, ":",parseInt(list[key].belongs2));
 				$("#"+key).addClass("hidden"); //css({"display":"none"});
 			}
@@ -384,7 +384,8 @@ function Companies() {
 			$(document.getElementById("toggleTree-"+id).firstChild).removeClass("glyphicon-plus");
 			$(document.getElementById("toggleTree-"+id).firstChild).addClass("glyphicon-minus");
 			for (var key in list) {
-				if (parseInt(list[key].belongs2)===parseInt(id)) {
+				console.log(list[key].belongs2),"~",parseInt(id));//x
+				if (parseInt(list[key].belongs2)===parseInt(id)) { //!
 					$("#"+key).removeClass("hidden");
 				}
 			}
