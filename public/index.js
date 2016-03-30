@@ -6,35 +6,12 @@
 		var companies= new Companies();
 		setTimeout(function() {//tpl
 			companies.dbGetCompanies(function() {
-				companies.printList();
-				//companies.dropdownPopulate();
-
-				//companies.companyChain(1);//
 				companies.populateRecur();//
 				companies.sumEarnings();
-
-
-				//companies.printNestedChain(4)//
 				$('[data-toggle="tooltip"]').tooltip();//tooltip
 			});
 			companies.setMainCompanyControls();
-
-			//companies.getTemplate('template.html');
-
 		}, 500);//tpl
-
-
-
-
-		/*
-		setInterval(function() {
-			//companies.companyChain(6);//
-			companies.populateRecur();
-			companies.sumEarnings();
-
-		}, 3000);
-		*/
-
 	}, 500);
 
 
@@ -43,205 +20,86 @@
 
 function Companies() {
 
-
-	var list= [];
-
+	var list= []; //list of companies
 	this.printList= function() {
 		console.log(list);
 	}
 
-	/*
-	$.get('ajax/test.html', function(data) {
-	  $('.result').html(data);
-	  alert('Load was performed.');
-	});
-	'template.html'
-	*/
-	var tpl= "";
+	var tpl= ""; //company template
 	$.get('company.tpl.html', function(res) {
 		tpl= res;
-		//console.log("tpl:",tpl);//
 	});
 
-	var liTpl= "";
-	$.get('list.tpl.html', function(res) {
-		liTpl= res;
-	});
-
-	this.dropdownPopulate= function() {
-		for (var key in list) {
-
-
-			if ( !list[key] ) continue; //|| key==0
-			console.log(key, !list[key] || key==0);
-
-
-			var el= document.createElement('li');
-			//$(el).attr({"id":c.id});
-			//el.setAttribute("id", id);
-
-			//$(el).addClass("company-scope");
-			//el.setAttribute("class", "company-scope");
-
-			var elHTML= liTpl;
-			elHTML= elHTML.replace("{{companyName}}", list[key].name);
-			//elHTML= elHTML.replace(/{{id}}/g, id);
-
-			el.innerHTML= elHTML;
-
-
-			document.getElementById("dropdownList").appendChild(el);
-		}
-	}
-
-	/*
-	var getTemplate= function(templateUrl) {
-		$.get(templateUrl, function(tpl) {
-			console.log(tpl);//
-
-		  return tpl;
-		});
-	}
-
-
-	var tpl= getTemplate('template.html');
-	/*
-	var tpl= '<div id={{id}} class="company" >'+
-		'<h3  >'+
-			'<a id=name-{{id}} class="name" href="#editName">{{name}}</a><input id=editName-{{id}} class="editName hidden" value="{{name}}" > '+
-			'<small><a id=addCompany-{{id}} class="addCompany" href="#+">(+)</a> '+
-			'<a id=delCompany-{{id}} class="delCompany" href="#x">(x)</a></small>'+
-		'</h3>'+
-		'<span class="eE" >$<a id=eE-{{id}} href="#changeEE" class="eE" >{{eE}}</a><input id=changeEE-{{id}} class="changeEE hidden" type=number step="0.01" value="{{eE}}" ></span> '+
-		'<sup id=sumEE-{{id}} class="sEE" ></sup>'+
-	'</div>';
-	//redo later as html-template
-	*/
-
-	this.companyChain= function(id) {
+	this.companyChain= function(id) { //put chain of subsidiaries of specified company
 		insertCompany(id,0);
 		this.populateRecur(id);
 	}
 
-
-	var insertCompany= function(id) {
-		//console.log(c, owner);
-
+	var insertCompany= function(id) { //insert company at page
+		//create and configure company scope and company element:
 		var el= document.createElement('div');
-		//$(el).attr({"id":c.id});
 		el.setAttribute("id", id);
-
-		//$(el).addClass("company-scope");
 		el.setAttribute("class", "company-scope");
-
-
 		var elHTML= tpl.replace(/{{name}}/g, list[id].name);
 		elHTML= elHTML.replace(/{{eE}}/g, list[id].eE);
 		elHTML= elHTML.replace("{{belongs2}}", list[id].belongs2);
 		elHTML= elHTML.replace(/{{id}}/g, id);
-
 		el.innerHTML= elHTML;
-
-		//console.log(elHTML);
-
-		var maxColor= 150;
-		//$(el).css({background:"rgb("+Math.floor(Math.random()*maxColor)+","+Math.floor(Math.random()*maxColor)+","+Math.floor(Math.random()*maxColor)+")"});
-
-		//console.log(id,">>",list[id]);
+		//add hanflers:
 		document.getElementById(list[id].belongs2).appendChild(el);
-
-		//console.log(">>",tpl, elHTML);//x
 		document.getElementById("name-"+id).onclick= function() { editName(id); }
-		//document.getElementById("editName-"+c.id).onkeypress= function(e) { renameCompany(c.id, e); }
 		document.getElementById("editName-"+id).onblur= function() { renameCompany(id); }
 		document.getElementById("eE-"+id).onclick= function() { changeEE(id); }
 		document.getElementById("changeEE-"+id).onblur= function() { setNewEE(id); }
 		document.getElementById("addCompany-"+id).onclick= function() { addCompany(id); }
 		document.getElementById("delCompany-"+id).onclick= function() { delCompany(id); }
-
 		document.getElementById("company-"+id).onclick= function() { highlightCompany(id); }
 		document.getElementById("delCompany-"+id).onmouseover= function() { highlightRelatedCompanies(id); }
 		document.getElementById("delCompany-"+id).onmouseout= function() { unHighlightRelatedCompanies(id); }
-
 		document.getElementById("toggleTree-"+id).onclick= function() { toggleTree(id); }
-
-		console.log(id,"--",list[id].belongs2); if (list[id].belongs2!=0) $(document.getElementById("toggleTree-"+list[id].belongs2).firstChild).addClass("glyphicon-minus");
-		//if ()
-
+		if (list[id].belongs2!=0) $(document.getElementById("toggleTree-"+list[id].belongs2).firstChild).addClass("glyphicon-minus"); //new subsidiary company, put "-"
 	}
 
-
-
-	/*
-	this.populateOwn= function(owner) {
-		for (var key in list) {
-			if (list[key].belongs2===owner.id) insertCompany(list[key], owner);
-		}
-	}
-	*/
-
-	this.populateRecur= function(ownerId) {
-		//console.log(list);
+	this.populateRecur= function(ownerId) { //populate subsidiaries elements with recurrency
 		ownerId= ownerId || 0;
-		//console.log("-",ownerId);//
 		for (var key in list) {
 			if (!list[key]) continue;
-			//console.log(key,"--",ownerId,list[key].belongs2);//,list[key].belongs2,"?==",owner.id);//
 			if (parseInt(list[key].belongs2)===parseInt(ownerId)) {
-				//console.log("yes!");
-				insertCompany(key); //insertCompany(list[key], owner);
+				insertCompany(key);
 				this.populateRecur(key);
 			}
-
 		}
-
 	}
 
-
-
-	this.sumEarnings= function() {
+	this.sumEarnings= function() { //public method
 		sumRecur();
 	}
 
-	var sumRecur= function(ownerId) {
+	var sumRecur= function(ownerId) { //summation of earnings for all subsidiaries of specified owner
 		ownerId= ownerId || 0;
-		//console.log("->",ownerId);//
-
-
 		var sumEE= parseFloat(list[ownerId].eE);
 		var hasSubsidiaries= false;
 		for (var key in list) {
-			//console.log(ownerId,"?==",list[key].belongs2,"("+key+")",(list[key].belongs2-ownerId));
 			if (!list[key]) continue;
 			if (parseInt(list[key].belongs2)===parseInt(ownerId)) {
-				//console.log("===");
 				sumEE+= sumRecur(key);
 				hasSubsidiaries= true;
 			}
-
-
 		}
-		//console.log(">>>",ownerId,"$",sumEE);
 		if (hasSubsidiaries) {
 			var el= document.getElementById("sumEE-"+ownerId);
 			if (el) el.innerHTML= "$"+sumEE;
 		}
-
 		return sumEE;
 	}
 
-
-
-
-	var editName= function(id) {
-
+	var editName= function(id) { //display input
 		$("#name-"+id).addClass("hidden");
 		$("#editName-"+id).removeClass("hidden");
 		$("#editName-"+id).select();
 	}
 
-	var renameCompany= function(id/*,e*/) {
-		//console.log(e.keyCode);
+	var renameCompany= function(id) { //input handling
 		var newName= $("#editName-"+id).val();
 		if (newName) {
 			list[id].name= newName;
@@ -252,15 +110,14 @@ function Companies() {
 		$("#editName-"+id).addClass("hidden");
 	}
 
-
-	var changeEE= function(id) {
+	var changeEE= function(id) { //display input
 		$("#eE-"+id).addClass("hidden");
 		$("#changeEE-"+id).removeClass("hidden");
 		$("#changeEE-"+id).select();
 	}
 
-	var setNewEE= function(id) {
-		var newEE= $("#changeEE-"+id).val(); //prompt("Enter estimated earnings", list[id].eE);
+	var setNewEE= function(id) { //input handling
+		var newEE= $("#changeEE-"+id).val();
 		if (newEE) {
 			list[id].eE= parseFloat(newEE);
 			document.getElementById("eE-"+id).innerText= newEE;
@@ -271,37 +128,27 @@ function Companies() {
 		$("#changeEE-"+id).addClass("hidden");
 	}
 
-	var addCompany= function(ownerId) {
-
-		//var companyName= "New Company";
-		//var id= list.length;
+	var addCompany= function(ownerId) { //handler
 		var company= {
-			//id: id,
 			name: "New Company",
 			eE: 0,
 			belongs2: ownerId
 		};
-
 		dbAddCompany(company, function(id) {
-			//console.log("addCompany id=",id);//x
-			insertCompany(id); //insertCompany(list[id], list[ownerId]);
+			insertCompany(id);
 			editName(id);
 			window.location= "#editName-"+id;
-
 		});
-
 	}
 
-	this.setMainCompanyControls= function() {
+	this.setMainCompanyControls= function() { //define root handlers
 		document.getElementById("addCompany-0").onclick= function() { addCompany(0); }
 		document.getElementById("expandAll").onclick= function() { expandAll(); }
 		document.getElementById("collapseAll").onclick= function() { collapseAll(); }
-
 	}
 
-	var delCompany= function(id) {
+	var delCompany= function(id) { //deleting from page
 		delete list[id];
-		// також не забути видалити всі дочірні елементи масиву!
 		$("#"+id).remove();
 		dbDelCompany(id);
 	}
@@ -322,9 +169,7 @@ function Companies() {
 		$(".company").removeClass("highlitedRemove");
 	}
 
-	var expandAll= function() {
-		//$(document.getElementById("toggleTree-"+id).firstChild).removeClass("glyphicon-plus");
-		//$(document.getElementById("toggleTree-"+id).firstChild).addClass("glyphicon-minus");
+	var expandAll= function() { //show companies tree
 		for (var key in list) {
 			if (
 				document.getElementById("toggleTree-"+key) &&
@@ -333,80 +178,61 @@ function Companies() {
 				$(document.getElementById("toggleTree-"+key).firstChild).removeClass("glyphicon-plus");
 				$(document.getElementById("toggleTree-"+key).firstChild).addClass("glyphicon-minus");
 			}
-
-			//if (parseInt(list[key].belongs2)===parseInt(id)) {
 			$("#"+key).removeClass("hidden");
-			//}
 		}
 	}
 
-	var collapseAll= function() {
+	var collapseAll= function() { //hide companies tree
 		for (var key in list) {
-			console.log( ":",list[key],":",document.getElementById("toggleTree-"+key) );//x
 			if (
 				document.getElementById("toggleTree-"+key) &&
 				$(document.getElementById("toggleTree-"+key).firstChild).hasClass("glyphicon-minus")
 			) {
-				console.log("+ -> -");//x
 				$(document.getElementById("toggleTree-"+key).firstChild).removeClass("glyphicon-minus");
 				$(document.getElementById("toggleTree-"+key).firstChild).addClass("glyphicon-plus");
 			}
-
 			/**/
-			if ( list[key] && parseInt(list[key].belongs2) ) { //!
+			if ( list[key] && parseInt(list[key].belongs2) ) {
 				console.log("&",key, ":",parseInt(list[key].belongs2));
-				$("#"+key).addClass("hidden"); //css({"display":"none"});
+				$("#"+key).addClass("hidden");
 			}
 			/**/
-
 		}
 	}
 
-
-
 	var toggleTree= function(id) {
-
 		if ( $(document.getElementById("toggleTree-"+id).firstChild).hasClass("glyphicon-minus") ) { //collapse
 			$(document.getElementById("toggleTree-"+id).firstChild).removeClass("glyphicon-minus");
 			$(document.getElementById("toggleTree-"+id).firstChild).addClass("glyphicon-plus");
 			var idSet= findNested(id);
 			for (var key in idSet) {
-				console.log(":",idSet[key],":",document.getElementById("toggleTree-"+idSet[key]).firstChild);//x
 				if ( $(document.getElementById("toggleTree-"+idSet[key]).firstChild).hasClass("glyphicon-minus") ) {
-					console.log("+ -> -");
 					$(document.getElementById("toggleTree-"+idSet[key]).firstChild).removeClass("glyphicon-minus");
 					$(document.getElementById("toggleTree-"+idSet[key]).firstChild).addClass("glyphicon-plus");
 				}
-
-				$("#"+idSet[key]).addClass("hidden"); //css({"display":"none"});
+				$("#"+idSet[key]).addClass("hidden");
 			}
 		} else { //expand
 			$(document.getElementById("toggleTree-"+id).firstChild).removeClass("glyphicon-plus");
 			$(document.getElementById("toggleTree-"+id).firstChild).addClass("glyphicon-minus");
 			for (var key in list) {
-				console.log(key,":",list[key],"~",parseInt(id));//x
-				if ( list[key] && parseInt(list[key].belongs2)===parseInt(id) ) { //!
+				if ( list[key] && parseInt(list[key].belongs2)===parseInt(id) ) {
 					$("#"+key).removeClass("hidden");
 				}
 			}
 		}
-
-
 	}
 
-
-	var findNested= function(id) {
+	var findNested= function(id) { //find subsidiaries as a one-dimension array
 		var nested= [];
 		for (var key in list) {
 			if (!list[key]) continue;
 			if (parseInt(list[key].belongs2)===parseInt(id)) {
 				nested[nested.length]= key;
-				//nested[nested.length]= nested.concat(findNested(key));//nested.push(findNested(key));
 				var innerNested= findNested(key);
 				if (innerNested.length) nested= nested.concat(innerNested);
 			}
 		}
-		//console.log(id,":",nested);
 		return nested;
 	}
 
@@ -415,18 +241,9 @@ function Companies() {
 		console.log(nested);
 	}
 
-
-
-	//------A-J-A-X-----
-
+	//--------D-B---A-P-I------->
 
 	var dbAddCompany= function(company, callback) {
-		//list[id]._id= list[id].id;
-		//delete list[id].id;
-		//for (var key in list) {
-		//	list[key]._id= list[key].id;
-		//}
-
 		$.ajax({
 			method: "post",
 			url: "/API/add-company",
@@ -450,38 +267,15 @@ function Companies() {
 			method: "get",
 			url: "/API/get-companies",
 			dataType: "json",
-			//data: list[id],
 			success: function(res) {
-				//console.log("res",res);
-
-
-				/*
-				var tmp= res.answer;
-
-				for (var key in tmp) {
-					list[tmp[key].id]= tmp[key];
-				}
-				*/
 				list= res.list;
-
-
-
-				if (list.length===0) { //start point
-
+				if (list.length===0) { //insert root
 					dbAddCompany({
-						//id: 0,
 						name: "root",
 						eE: 0,
 						belongs2: null
 					});
 				}
-
-
-
-				//insert({"id":0,"name":"root", "eE":0, "belongs2":null})
-
-
-
 				callback();
 			},
 			error: function() {
@@ -489,8 +283,6 @@ function Companies() {
 			}
 		});
 	}
-
-
 
 	var dbUpdateCompany= function(id) {
 		$.ajax({
@@ -507,16 +299,9 @@ function Companies() {
 		});
 	}
 
-
-
 	var dbDelCompany= function(id) {
-
 		var idSet= [id].concat(findNested(id));
 		console.log(idSet);
-
-
-
-
 		$.ajax({
 			method: "delete",
 			url: "/API/delete-company?id",
@@ -530,7 +315,5 @@ function Companies() {
 			}
 		});
 	}
-
-
 
 }
