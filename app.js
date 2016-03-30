@@ -9,8 +9,8 @@ app.use(bodyParser.urlencoded({'extended': 'true'}));
 app.use(bodyParser.json());
 
 var MongoClient = require('mongodb').MongoClient;
-var mongoUrl = 'mongodb://localhost:27017/test';
-//var mongoUrl = 'mongodb://eliftech:1@ds025239.mlab.com:25239/eliftech_companies';
+//var mongoUrl = 'mongodb://localhost:27017/test';
+var mongoUrl = 'mongodb://eliftech:1@ds025239.mlab.com:25239/eliftech_companies';
 
 var methodOverride= require("method-override");
 
@@ -27,7 +27,7 @@ app.get("/API/get-companies", function(req,res) {
 	MongoClient.connect(mongoUrl, function(err,db) {
 		if (err) throw err;
 		var collection= db.collection('companies');
-		collection.find().toArray(function(err, results) { 
+		collection.find().toArray(function(err, results) {
 			if (err) throw err;
 			var list= buildArrayById(results);
 			db.close();
